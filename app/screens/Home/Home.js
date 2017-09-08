@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import MyAppRouter from '../../router';
 import {  
   StyleSheet,
   Text,
@@ -7,13 +8,15 @@ import {
   Image,
   View
 } from 'react-native';
-import MyAppRouter from '../../router';
+import { connect } from 'react-redux';
+import {doLogin} from '../../redux/actions';
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Home',
     header: null
   };
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -38,13 +41,24 @@ export default class HomeScreen extends Component {
           />
         </View>
         <View style={styles.buttons}>
-          <Button  style={styles.button}  onPress={() => navigate('Database')}  title="FlatList using Firebase data"/>
+          <Button  style={styles.button}  onPress={this.props.doLogin}  title="Login"/>
           <Button  style={styles.button}  onPress={() => navigate('API')}  title="FlatList Using Network Fetch Data"/>
         </View>
       </View>
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    doLogin: () => dispatch(doLogin(1))
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(HomeScreen)
 
 const styles = StyleSheet.create({
   container: {

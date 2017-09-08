@@ -28,19 +28,18 @@ const MyTabNavigator = TabNavigator({
 		      borderWidth: 3
 		    }
 	  	},
+	}, {
+		navigationOptions: {
+		  	tabBarLabel: 'Home',	
+			tabBarIcon: ({ tintColor }) => (
+			  <Image
+			    source={images.iconHome}
+			    style={[styles.icon, {tintColor: colors.iconColor}]}
+			  />
+			),
+		}
 	}
 );
-
-MyTabNavigator.navigationOptions = {
-  	tabBarLabel: 'Home',
-	// Note: By default the icon is only shown on iOS. Search the showIcon option below.
-	tabBarIcon: ({ tintColor }) => (
-	  <Image
-	    source={images.iconHome}
-	    style={[styles.icon, {tintColor: colors.iconColor}]}
-	  />
-	),
-};
 
 const MyAppRouter = StackNavigator({
 	Home: { screen: MyTabNavigator },
