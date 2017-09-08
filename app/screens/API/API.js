@@ -9,7 +9,8 @@ import {
 
 export default class APISreen extends Component {
     static navigationOptions = {
-        title: 'API'     
+        title: 'API',
+        header: null
     };
     constructor(props){
         super(props);

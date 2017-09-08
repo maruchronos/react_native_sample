@@ -12,7 +12,8 @@ import firebaseServices from "../../services/firebase";
 
 export default class DatabaseSreen extends Component {
     static navigationOptions = {
-        title: 'Database'     
+        title: 'Database',
+        header: null
     };
     
     constructor(props){

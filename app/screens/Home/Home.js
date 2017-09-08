@@ -4,6 +4,7 @@ import {
   Text,
   Button,
   FlatList,
+  Image,
   View
 } from 'react-native';
 import MyAppRouter from '../../router';
@@ -23,7 +24,7 @@ export default class HomeScreen extends Component {
           </Text>
           <Text style={styles.instructions}>
             Some Features:
-          </Text>        
+          </Text>
           <FlatList
             data={[
               {key: 'Route With Stack Navigation'},
