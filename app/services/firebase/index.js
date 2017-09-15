@@ -1,12 +1,12 @@
 import * as firebase from 'firebase';
 import firebaseConfig from "../../config/firebase";
 
-async function firebaseLogin(email, password) {
+async function firebaseLogin(email, password, callback) {
   return await firebase
     .auth()
     .signInWithEmailAndPassword(email, password).then((user)=>{        
         console.log('An User has logged in with email: '+user.email);
-        //console.log(firebase.auth().currentUser);
+        callback(user);
     }).catch(function(error) {
 	  // Handle Errors here.
 	  var errorCode = error.code;

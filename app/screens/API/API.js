@@ -6,48 +6,49 @@ import {
     FlatList,
     View
 } from 'react-native';
+import fetchData from '../../services/api';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { actions } from '../../redux/actions';
 
-export default class APISreen extends Component {
+class APISreen extends Component {
     static navigationOptions = {
         title: 'API',
         header: null
     };
     constructor(props){
         super(props);
-        this.state = {
-            isLoading: true,
+        this.state = {            
             data: []
         }        
     }
 
     componentWillMount(){
-        this._fetchData();
+        fetchData('movies',this._fetchData);
     }
 
-    _fetchData = async () => {
-        return fetch('https://facebook.github.io/react-native/movies.json')
-            .then((response) => response.json())
-            .then((responseJson) => {        
-            console.log(responseJson);
-            this.setState({
-                isLoading:false,
-                data: responseJson.movies
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });    
+    _fetchData = (response, error) => {
+        if(error){
+            console.log(error);
+            return;
+        }
+
+        this.setState({            
+            data: response.movies
+        });
+
+        this.props.loadFromAPI();
     }
 
     _renderList = ({item}) => (
         <View key={item.title+item.releaseYear} style={styles.li}>
-            <Text style={styles.liText}>{item.title}</Text>    
+            <Text style={styles.liText}>{item.title} - {item.releaseYear}</Text>    
         </View>
     );
 
     render() {
         
-        if (this.state.isLoading) {
+        if (!this.props.appData.sync) {
             return (
             <View style={{flex: 1, paddingTop: 20}}>
                 <ActivityIndicator />
@@ -68,11 +69,20 @@ export default class APISreen extends Component {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(actions,dispatch);
+}
+
+export default connect(
+    (state) => {    
+        return state;
+    },
+    mapDispatchToProps
+)(APISreen)
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
     li: {

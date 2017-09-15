@@ -4,13 +4,17 @@ import {
   StyleSheet,
   Text,
   FlatList,
+  Button,
   View
 } from 'react-native';
 import * as firebase from "firebase";
 import firebaseConfig from "../../config/firebase";
 import firebaseServices from "../../services/firebase";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { actions } from '../../redux/actions';
 
-export default class DatabaseSreen extends Component {
+class DatabaseSreen extends Component {
     static navigationOptions = {
         title: 'Database',
         header: null
@@ -18,22 +22,31 @@ export default class DatabaseSreen extends Component {
     
     constructor(props){
         super(props);
-        this.state = {
-            isLoading: true,
+        this.state = {            
+            user: 'yokormsm@gmail.com',
+            password: 'm4rum4ru',
             data: []
         }
     }
 
     componentWillMount(){
-        firebaseServices.firebaseLogin('yokormsm@gmail.com','m4rum4ru');
+    }    
+
+    _handleLoginButton = () => {
+        firebaseServices.firebaseLogin(this.state.user, this.state.password, this._doLogin);
     }
 
-    componentDidMount() {
+    _doLogin = (user) => {
+        this.props.doLogin(user);
+        if(!this.props.appData.loggedIn) 
+            return;
+
+        this.props.showLoading();
         firebaseServices.getFromDB('users','email',(items) => {
             this.setState({
                 data: items,
-                isLoading: false
             });
+            this.props.hideLoading();
         });
     }
 
@@ -44,8 +57,16 @@ export default class DatabaseSreen extends Component {
     );
 
     render() {
+
+        if(!this.props.appData.loggedIn){
+            return (
+                <View style={{flex: 1, paddingTop: 20}}>
+                    <Button  style={styles.button}  onPress={this._handleLoginButton}  title="LOGIN"/>
+                </View>
+            );
+        }
         
-        if (this.state.isLoading) {
+        if (this.props.appData.loading) {
             return (
             <View style={{flex: 1, paddingTop: 20}}>
                 <ActivityIndicator />
@@ -66,11 +87,20 @@ export default class DatabaseSreen extends Component {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(actions,dispatch);
+}
+
+export default connect(
+  (state) => {    
+    return state;
+  },
+  mapDispatchToProps
+)(DatabaseSreen)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   li: {

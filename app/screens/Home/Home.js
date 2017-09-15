@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import MyAppRouter from '../../router';
-import {  
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { actions } from '../../redux/actions';
+import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   Button,
@@ -8,17 +12,30 @@ import {
   Image,
   View
 } from 'react-native';
-import { connect } from 'react-redux';
-import {doLogin} from '../../redux/actions';
 
 class HomeScreen extends Component {
+  constructor(props) {
+    super(props);    
+  }
+
   static navigationOptions = {
     title: 'Home',
     header: null
-  };
+  };  
+
+  componentDidMount() {
+    this.props.hideLoading();    
+  }
 
   render() {
     const { navigate } = this.props.navigation;
+    if(this.props.appData.loading){
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />          
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.main}>
@@ -40,8 +57,7 @@ class HomeScreen extends Component {
             renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
           />
         </View>
-        <View style={styles.buttons}>
-          <Button  style={styles.button}  onPress={this.props.doLogin}  title="Login"/>
+        <View style={styles.buttons}>          
           <Button  style={styles.button}  onPress={() => navigate('API')}  title="FlatList Using Network Fetch Data"/>
         </View>
       </View>
@@ -50,15 +66,17 @@ class HomeScreen extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    doLogin: () => dispatch(doLogin(1))
-  }
+    return bindActionCreators(actions,dispatch);
 }
 
 export default connect(
-  null,
+  (state) => {
+    console.log(state.loading);
+    return state;
+  },
   mapDispatchToProps
 )(HomeScreen)
+
 
 const styles = StyleSheet.create({
   container: {
