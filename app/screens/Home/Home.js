@@ -3,29 +3,42 @@ import MyAppRouter from '../../router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actions } from '../../redux/actions';
+import colors from "../../config/colors";
+import images from "../../config/images";
 import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  Button,
-  FlatList,
-  Image,
-  View
+    ActivityIndicator,
+    StyleSheet,
+    Text,
+    Button,
+    FlatList,
+    Image,
+    View,
+    Linking
 } from 'react-native';
 
 class HomeScreen extends Component {
-  constructor(props) {
-    super(props);    
-  }
+    constructor(props) {
+        super(props);    
+    }
 
-  static navigationOptions = {
-    title: 'Home',
-    header: null
-  };  
+    static navigationOptions = {
+        title: 'Home',
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return (<Image
+                source={images.iconHome}
+                style={[styles.icon, {tintColor: colors.iconColor}]}
+            />)
+        }
+    };
 
-  componentDidMount() {
-    this.props.hideLoading();    
-  }
+    componentDidMount() {
+        this.props.hideLoading();    
+    }
+
+    _shareOnWhatsapp(url){
+        Linking.openURL(url).catch(err => console.error('An error occurred', err));
+    }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -52,13 +65,14 @@ class HomeScreen extends Component {
               {key: 'Firebase Auth and Request'},
               {key: 'Remote Api Data Request'},
               {key: 'FlatList Display'},
-              {key: 'Tab Navigation'}
+              {key: 'Tab Navigation'},
+              {key: 'Redux'}
             ]}
             renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
           />
         </View>
         <View style={styles.buttons}>          
-          <Button  style={styles.button}  onPress={() => navigate('API')}  title="FlatList Using Network Fetch Data"/>
+          <Button  style={styles.button}  onPress={() => this._shareOnWhatsapp('whatsapp://send?text=Hello World!&phone=+5575991902962')}  title="Send Whatsapp Message"/>
         </View>
       </View>
     );
@@ -70,8 +84,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  (state) => {
-    console.log(state.loading);
+  (state) => {    
     return state;
   },
   mapDispatchToProps
@@ -110,5 +123,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 10    
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    opacity: 1
   }
 });

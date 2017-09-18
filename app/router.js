@@ -1,19 +1,15 @@
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import HomeScreen from './screens/Home';
 import DatabaseScreen from './screens/Database';
+import YoutubeScreen from './screens/Youtube';
 import APIScreen from './screens/API';
 import colors from "./config/colors";
-import images from "./config/images";
-
-import {  
-  StyleSheet,
-  Image
-} from 'react-native';
 
 const MyTabNavigator = TabNavigator({
 		Home: { screen: HomeScreen },
 	 	Database: { screen: DatabaseScreen },
-	  	API: { screen: APIScreen }
+	  	API: { screen: APIScreen },
+	 	Youtube: { screen: YoutubeScreen }
 	}, {
 	  	tabBarOptions: {
 		    showIcon: true,
@@ -29,30 +25,14 @@ const MyTabNavigator = TabNavigator({
 		      borderWidth: 3
 		    }
 	  	},
-	}, {
-		navigationOptions: {
-		  	tabBarLabel: 'Home',	
-			tabBarIcon: ({ tintColor }) => (
-			  <Image
-			    source={images.iconHome}
-			    style={[styles.icon, {tintColor: colors.iconColor}]}
-			  />
-			),
-		}
 	}
 );
 
 const MyAppRouter = StackNavigator({
 	Home: { screen: MyTabNavigator },
+	API: { screen: APIScreen },
 	Database: { screen: DatabaseScreen },
-	API: { screen: APIScreen }
-});
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 26,
-    height: 26,
-  }
+	Youtube: { screen: YoutubeScreen }
 });
 
 export default MyAppRouter;

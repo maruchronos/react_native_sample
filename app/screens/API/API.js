@@ -4,17 +4,26 @@ import {
     StyleSheet,
     Text,
     FlatList,
+    Image,
     View
 } from 'react-native';
 import fetchData from '../../services/api';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actions } from '../../redux/actions';
+import colors from "../../config/colors";
+import images from "../../config/images";
 
 class APISreen extends Component {
     static navigationOptions = {
         title: 'API',
-        header: null
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return (<Image
+                source={images.iconDB}
+                style={[styles.icon, {tintColor: colors.iconColor}]}
+            />)
+        }
     };
     constructor(props){
         super(props);
@@ -96,5 +105,10 @@ const styles = StyleSheet.create({
     liText: {
         color: '#333',
         fontSize: 16,
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        opacity: 1
     }
 });

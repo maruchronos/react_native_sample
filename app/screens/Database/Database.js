@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   Button,
+  Image,
   View
 } from 'react-native';
 import * as firebase from "firebase";
@@ -13,11 +14,19 @@ import firebaseServices from "../../services/firebase";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actions } from '../../redux/actions';
+import colors from "../../config/colors";
+import images from "../../config/images";
 
 class DatabaseSreen extends Component {
     static navigationOptions = {
         title: 'Database',
-        header: null
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return (<Image
+                source={images.iconDB}
+                style={[styles.icon, {tintColor: colors.iconColor}]}
+            />)
+        }
     };
     
     constructor(props){
@@ -114,5 +123,10 @@ const styles = StyleSheet.create({
   liText: {
     color: '#333',
     fontSize: 16,
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    opacity: 1
   }
 });
